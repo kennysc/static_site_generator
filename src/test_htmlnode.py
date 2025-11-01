@@ -1,6 +1,6 @@
 import unittest
 
-from htmlnode import HTMLNode
+from htmlnode import HTMLNode, LeafNode
 
 props_1 = {
     "href": "https://www.google.com",
@@ -71,6 +71,53 @@ class TestHTMLNode(unittest.TestCase):
             None,
         )
 
+    def test_leaf_to_html_p(self):
+        node = LeafNode("p", "Hello, world!")
+        self.assertEqual(node.to_html(), "<p>Hello, world!</p>")
+
+    def test_leaf_to_html_a(self):
+        node = LeafNode("a", "Hello, world!")
+        self.assertEqual(node.to_html(), "<a>Hello, world!</a>")
+
+    def test_leaf_to_html_props(self):
+        node = LeafNode("a", "Hello, world!", {"href": "https://www.google.com"})
+        self.assertEqual(node.to_html(), '<a href="https://www.google.com">Hello, world!</a>')
+
+    def test_leaf_to_html_notag(self):
+        node = LeafNode(None, "Hello, world!")
+        self.assertEqual(node.to_html(), "Hello, world!")
+
+    def test_leaf_repr(self):
+        node = LeafNode("div", "Hello, world!",{"href": "http://192.168.0.1"})
+        self.assertEqual(
+            node.__repr__(),
+            "LeafNode(div, Hello, world!, {'href': 'http://192.168.0.1'})"
+        )
+
+    def test_leaf_values(self):
+        node = LeafNode(
+            "p",
+            "This is a leaf Node",
+            {"href": "https//duckduckgo.com"}
+        )
+
+        self.assertEqual(
+            node.tag,
+            "p")
+
+        self.assertEqual(
+            node.value,
+            "This is a leaf Node")
+
+        self.assertEqual(
+            node.children,
+            None
+        )
+
+        self.assertEqual(
+            node.props,
+            {"href": "https//duckduckgo.com"}
+        )
 
 if __name__ == "__main__":
     unittest.main()
