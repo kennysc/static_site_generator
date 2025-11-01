@@ -23,6 +23,7 @@ class TestTextNode(unittest.TestCase):
         node2 = TextNode("This is a text node", TextType.LINK)
         self.assertNotEqual(node, node2)
 
+class TestTextNodeToHTMLNode(unittest.TestCase):
     def test_text(self):
         node = TextNode("This is a text node", TextType.TEXT)
         html_node = text_node_to_html_node(node)

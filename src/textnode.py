@@ -27,9 +27,6 @@ class TextNode:
 def text_node_to_html_node(text_node):
     text_node_val = text_node.text_type
 
-    if not isinstance(text_node_val, TextType):
-        raise Exception("Not a valid type")
-
     if text_node_val == TextType.TEXT:
         return LeafNode(None, text_node.text)
     if text_node_val == TextType.BOLD:
@@ -52,3 +49,4 @@ def text_node_to_html_node(text_node):
              "alt": f"{text_node.text}",
              },
         )
+    raise ValueError(f"Unsupported type: {text_node_val}")
