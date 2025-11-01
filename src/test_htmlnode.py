@@ -1,6 +1,6 @@
 import unittest
 
-from htmlnode import HTMLNode, LeafNode
+from htmlnode import HTMLNode, LeafNode, ParentNode
 
 props_1 = {
     "href": "https://www.google.com",
@@ -118,6 +118,55 @@ class TestHTMLNode(unittest.TestCase):
             node.props,
             {"href": "https//duckduckgo.com"}
         )
+    
+    def test_to_html_with_children(self):
+        child_node = LeafNode("span", "child")
+        parent_node = ParentNode("div", [child_node])
+        self.assertEqual(
+            parent_node.to_html(),
+            "<div><span>child</span></div>"
+        )
+
+    def test_to_html_with_grandchildren(self):
+        grandchildren_node = LeafNode("b", "grandchild")
+        child_node = ParentNode("span", [grandchildren_node])
+        parent_node = ParentNode("div", [child_node])
+        self.assertEqual(
+            parent_node.to_html(),
+            "<div><span><b>grandchild</b></span></div>")
+
+    def test_to_html_without_children(self):
+        parent_node = ParentNode("p", [])
+        self.assertEqual(
+            parent_node.to_html(),
+            "<p></p>")
+
+    def test_to_html_multiple_childrens(self):
+        child1 = LeafNode(None, "This is normal text ")
+        child2 = LeafNode("b", "and this is bold.")
+        parent = ParentNode("p", [child1, child2])
+        self.assertEqual(
+            parent.to_html(),
+            "<p>This is normal text <b>and this is bold.</b></p>")
+
+    def test_to_html_with_childrens_and_props(self):
+        child1 = LeafNode(None, "You can visit")
+        child2 = LeafNode(
+            "a",
+            "Example.com",
+            {"href": "https://www.example.com", "target": "_blank"},
+        ) 
+        child3 = LeafNode(None, "or")
+        child4 = LeafNode(
+            "a",
+            "Wikipedia",
+            {"href": "https://www.wikipedia.org", "target": "_blank"},
+        ) 
+        child5 = LeafNode(None, "to learn more.")
+        parent = ParentNode("p", [child1, child2, child3, child4, child5])
+        self.assertEqual(
+            parent.to_html(),
+            '<p>You can visit<a href="https://www.example.com" target="_blank">Example.com</a>or<a href="https://www.wikipedia.org" target="_blank">Wikipedia</a>to learn more.</p>')
 
 if __name__ == "__main__":
     unittest.main()
